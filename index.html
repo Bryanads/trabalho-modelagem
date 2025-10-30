@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Métodos Numéricos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Calculadora de Métodos Numéricos</h1>
+    </header>
+
+    <nav>
+        <a href="#" id="nav-gauss" class="active">Eliminação de Gauss</a>
+        <a href="#" id="nav-bissecao">Bisseção</a>
+        <a href="#" id="nav-newton">Newton-Raphson</a>
+    </nav>
+
+    <main>
+        <div id="panel-gauss" class="panel active">
+            <h2>Eliminação de Gauss</h2>
+            <form id="gauss-form">
+                <div class="form-group">
+                    <label for="gauss-n">Tamanho do Sistema (N):</label>
+                    <input type="number" id="gauss-n" value="3" min="2" max="10">
+                    <button type="button" id="btn-set-matrix">Definir Matriz</button>
+                </div>
+
+                <div id="gauss-matrix-container">
+                    </div>
+
+                <button type="submit">Resolver Sistema</button>
+            </form>
+        </div>
+
+        <div id="panel-bissecao" class="panel">
+            <h2>Método da Bisseção</h2>
+            <form id="bissecao-form">
+                <div class="form-group">
+                    <label for="bissecao-f">Função f(x) =</label>
+                    <input type="text" id="bissecao-f" class="math-input" placeholder="Clique aqui e use a calculadora abaixo" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="bissecao-xl">Limite Inferior (xl):</label>
+                    <input type="number" id="bissecao-xl" step="any" required>
+                </div>
+                <div class="form-group">
+                    <label for="bissecao-xu">Limite Superior (xu):</label>
+                    <input type="number" id="bissecao-xu" step="any" required>
+                </div>
+                <div class="form-group">
+                    <label for="bissecao-es">Erro Desejado (%):</label>
+                    <input type="number" id="bissecao-es" value="0.01" step="any" required>
+                </div>
+                <div class="form-group">
+                    <label for="bissecao-imax">Max Iterações:</label>
+                    <input type="number" id="bissecao-imax" value="100" required>
+                </div>
+                <button type="submit">Encontrar Raiz</button>
+            </form>
+        </div>
+
+        <div id="panel-newton" class="panel">
+            <h2>Método de Newton-Raphson</h2>
+            <form id="newton-form">
+                <div class="form-group">
+                    <label for="newton-f">Função f(x) =</label>
+                    <input type="text" id="newton-f" class="math-input" placeholder="Clique aqui e use a calculadora abaixo" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="newton-x0">Chute Inicial (x0):</label>
+                    <input type="number" id="newton-x0" step="any" required>
+                </div>
+                <div class="form-group">
+                    <label for="newton-es">Erro Desejado (%):</label>
+                    <input type="number" id="newton-es" value="0.001" step="any" required>
+                </div>
+                <div class="form-group">
+                    <label for="newton-imax">Max Iterações:</label>
+                    <input type="number" id="newton-imax" value="50" required>
+                </div>
+                <button type="submit">Encontrar Raiz</button>
+            </form>
+        </div>
+
+        <div id="math-calculator" class="calculator" style="display: none;">
+            <button type="button" data-val="sin(" class="calc-btn fn">sin</button>
+            <button type="button" data-val="cos(" class="calc-btn fn">cos</button>
+            <button type="button" data-val="tan(" class="calc-btn fn">tan</button>
+            <button type="button" data-val="exp(" class="calc-btn fn">e^x</button>
+            <button type="button" data-val="log(" class="calc-btn fn">ln</button>
+            <button type="button" data-val="7" class="calc-btn">7</button>
+            <button type="button" data-val="8" class="calc-btn">8</button>
+            <button type="button" data-val="9" class="calc-btn">9</button>
+            <button type="button" data-val="(" class="calc-btn op">(</button>
+            <button type="button" data-val=")" class="calc-btn op">)</button>
+            <button type="button" data-val="4" class="calc-btn">4</button>
+            <button type="button" data-val="5" class="calc-btn">5</button>
+            <button type="button" data-val="6" class="calc-btn">6</button>
+            <button type="button" data-val="*" class="calc-btn op">*</button>
+            <button type="button" data-val="/" class="calc-btn op">/</button>
+            <button type="button" data-val="1" class="calc-btn">1</button>
+            <button type="button" data-val="2" class="calc-btn">2</button>
+            <button type="button" data-val="3" class="calc-btn">3</button>
+            <button type="button" data-val="+" class="calc-btn op">+</button>
+            <button type="button" data-val="-" class="calc-btn op">-</button>
+            <button type="button" data-val="0" class="calc-btn">0</button>
+            <button type="button" data-val="." class="calc-btn">.</button>
+            <button type="button" data-val="x" class="calc-btn var">x</button>
+            <button type="button" data-val="E" class="calc-btn var">e</button>
+            <button type="button" data-val="PI" class="calc-btn var">π</button>
+            <button type="button" data-val="**" class="calc-btn op">^</button>
+            <button type="button" id="calc-clear" class="calc-btn control">AC</button>
+            <button type="button" id="calc-backspace" class="calc-btn control">DEL</button>
+            <button type="button" id="calc-close" class="calc-btn control">OK</button>
+        </div>
+
+
+        <div id="result-container">
+            <h3>Resultado:</h3>
+            <pre id="result-output"></pre>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.2/math.min.js"></script>
+
+    <script src="gauss.js"></script>
+    <script src="bissecao.js"></script>
+    <script src="newton.js"></script>
+
+    <script src="main.js"></script>
+</body>
+</html>
