@@ -1,13 +1,20 @@
-/* Reset Básico */
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+/* --- Cores Base pro proximo que quiser alterar algo ---
+   Barbie Pink: #FF4081 
+   Light Pink: #F8BBD0 
+   Accent Blue/Purple: #7C4DFF 
+   White: #FFFFFF
+*/
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f4f7f6;
+    background-color: #F8BBD0; /* Rosa Claro de Fundo ou então a gente n ve nada */
     color: #333;
     line-height: 1.6;
     padding: 20px;
@@ -16,36 +23,43 @@ body {
 header {
     text-align: center;
     margin-bottom: 20px;
+    color: #FF4081; 
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); 
 }
 
+/* --- Abas --- */
 nav {
     display: flex;
     justify-content: center;
-    background-color: #fff;
-    border-bottom: 2px solid #007bff;
-    margin-bottom: 20px;
+    background-color: #FFFFFF;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    margin-bottom: 0; 
 }
 
 nav a {
     padding: 14px 20px;
     text-decoration: none;
-    color: #007bff;
+    color: #7C4DFF; 
     font-weight: bold;
     border-bottom: 4px solid transparent;
+    transition: all 0.3s ease;
 }
 
 nav a.active {
-    color: #333;
-    border-bottom: 4px solid #007bff;
+    color: #FF4081; 
+    border-bottom: 4px solid #FF4081;
+    background-color: #F8BBD0;
 }
 
 main {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    background-color: #FFFFFF;
+    border-radius: 0 0 8px 8px; 
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); 
+    border-top: 1px solid #FF4081; 
 }
 
 /* Lógica das abas: esconde painéis inativos */
@@ -58,63 +72,82 @@ main {
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .form-group label {
     display: block;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    color: #FF4081;
 }
 
 input[type="text"],
 input[type="number"] {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 12px;
+    border: 1px solid #F8BBD0;
+    border-radius: 6px;
     font-size: 16px;
+    transition: border-color 0.3s;
 }
 
+input[type="text"]:focus,
+input[type="number"]:focus {
+    border-color: #7C4DFF;
+    box-shadow: 0 0 5px rgba(124, 77, 255, 0.5); 
+    outline: none;
+}
+
+/* --- Estilos dos Botões --- */
 button {
-    background-color: #007bff;
+    background-color: #FF4081; 
     color: white;
-    padding: 12px 20px;
+    padding: 12px 25px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
     margin-top: 10px;
+    transition: background-color 0.3s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shading no botão, não alterar ou vamos se perder */
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #e5396b;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 button[type="button"] {
-    background-color: #6c757d;
+    background-color: #7C4DFF; 
 }
 button[type="button"]:hover {
-    background-color: #5a6268;
+    background-color: #653ecc;
 }
 
+/* --- Container de Resultados --- */
 #result-container {
-    margin-top: 20px;
-    border-top: 1px solid #eee;
+    margin-top: 30px;
+    border-top: 2px solid #F8BBD0; 
     padding-top: 20px;
 }
 
-#result-output {
-    background-color: #282c34;
-    color: #f8f8f2;
-    padding: 15px;
-    border-radius: 4px;
-    white-space: pre-wrap; /* Garante a quebra de linha */
-    word-wrap: break-word;
+#result-container h3 {
+    color: #7C4DFF; 
 }
 
-/* Estilos da Matriz de Gauss */
+#result-output {
+    background-color: #3a3f4c;
+    color: #a4f5d6; 
+    padding: 15px;
+    border-radius: 6px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2); 
+}
+
+/* --- Estilos da Matriz de Gauss --- */
 #gauss-matrix-inputs {
     display: grid;
     gap: 10px;
@@ -128,63 +161,92 @@ button[type="button"]:hover {
 }
 
 #gauss-matrix-inputs input {
-    width: 60px; /* Largura fixa para entradas da matriz */
+    width: 60px;
     text-align: center;
 }
 
+/*  Estilos da Entrada de Função Matemática  */
 input.math-input {
     background-color: #eee;
     cursor: pointer;
     font-family: "Courier New", Courier, monospace;
     font-size: 1.1rem;
     color: #333;
+    background-image: linear-gradient(to right, #ffebee, #ffffff); /* Leve gradiente */
 }
 
 input.math-input:focus {
     background-color: #fff;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0,123,255,0.5);
+    border-color: #FF4081; 
+    box-shadow: 0 0 5px rgba(255, 64, 129, 0.5);
 }
 
+/*  Calculadora Científica */
 .calculator {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
-    margin-top: 15px;
-    padding: 15px;
-    background-color: #f4f7f6;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+    gap: 8px; 
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #F8BBD0; 
+    border-radius: 10px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.15); 
 }
 
 .calc-btn {
     padding: 15px 10px;
     font-size: 1rem;
     font-weight: bold;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background-color: #fff;
+    border-radius: 8px;
+    border: none; 
+    background-color: #FFFFFF;
     cursor: pointer;
     text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    transition: background-color 0.1s, transform 0.05s;
 }
 
 .calc-btn:active {
-    transform: scale(0.95);
-    background-color: #ddd;
+    transform: scale(0.97);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .calc-btn.fn {
-    background-color: #e0eafc; /* Azul claro */
+    background-color: #E6E0FF; 
+    color: #7C4DFF;
 }
 .calc-btn.op {
-    background-color: #fde2e2; /* Vermelho/Laranja claro */
+    background-color: #FFEBEE; 
+    color: #FF4081;
     font-size: 1.2rem;
 }
 .calc-btn.var {
-    background-color: #e2fbe2; /* Verde claro */
+    background-color: #E2FBE2; 
+    color: #388E3C;
     font-style: italic;
 }
 .calc-btn.control {
-    background-color: #ffc; /* Amarelo claro */
-    color: #a00;
+    background-color: #FFCCBC;
+    color: #D32F2F;
+}
+
+/* --- ESTILO DA IMAGEM FIXA DA BARBIE --- */
+#barbie-fixa {
+    /* 1. Torna a imagem fixa na tela (viewport) */
+    position: fixed; 
+
+    /* 2. Ancorar na parte inferior (0 pixels do fundo) */
+    bottom: 0; 
+    
+    /* 3. Ancorar no canto direito (20 pixels de margem da direita) */
+    right: 20px; 
+
+    /* 4. Define o tamanho da imagem (ajuste este valor se ela estiver muito grande) */
+    width: 150px; 
+    
+    /* 5. Garante que ela fique por cima do resto do conteúdo */
+    z-index: 999; 
+    
+    /* 6. (Opcional) Adiciona uma sombra para dar um efeito 3D */
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
 }
