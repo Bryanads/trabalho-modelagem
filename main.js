@@ -163,6 +163,13 @@ document.addEventListener('DOMContentLoaded', () => {
     gaussForm.addEventListener('submit', (e) => {
         e.preventDefault();
         resultOutput.textContent = '';
+        const resultContainer = document.getElementById('result-container');
+        const resultHeader = document.querySelector('.result-header');
+        
+        // Remove classes de animação anteriores
+        resultContainer.classList.remove('result-celebration');
+        resultHeader.classList.remove('result-success');
+        
         try {
             const n = parseInt(document.getElementById('gauss-n').value);
             let A = Array(n).fill(0).map(() => Array(n).fill(0));
@@ -179,13 +186,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             eliminacaoGaussianaPivoteamento(A, b); //
             const solucao_x = retroSubstituicao(A, b);
-            let resultStr = "Solução (Vetor x):\n\n";
+            
+            // Formatação melhorada dos resultados
+            let resultStr = "✨ SOLUÇÃO DO SISTEMA LINEAR, PRA VOCÊ, MINHA GATA! 💕\n";
+            resultStr += "═".repeat(40) + "\n\n";
+            resultStr += "🎯 Vetor Solução (x):\n\n";
+            
             solucao_x.forEach((val, i) => {
-                resultStr += `x[${i}] = ${val.toFixed(6)}\n`;
+                resultStr += `💖 x[${i}] = ${val.toFixed(6)}\n`;
             });
+            
+            resultStr += "\n" + "═".repeat(40) + "\n";
+            resultStr += "✅ Sistema resolvido com sucesso, bebê! 💖";
+            
             resultOutput.textContent = resultStr;
+            
+            // Adiciona animações de celebração
+            setTimeout(() => {
+                resultContainer.classList.add('result-celebration');
+                resultHeader.classList.add('result-success');
+            }, 100);
+            
         } catch (error) {
-            resultOutput.textContent = `Erro: ${error.message}`;
+            resultOutput.textContent = `❌ ERRO:\n${error.message}\n\n💡 Verifique os valores inseridos e tente novamente! 💕`;
         }
     });
 
@@ -195,6 +218,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     bissecaoForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        const resultContainer = document.getElementById('result-container');
+        const resultHeader = document.querySelector('.result-header');
+        
+        // Remove classes de animação anteriores
+        resultContainer.classList.remove('result-celebration');
+        resultHeader.classList.remove('result-success');
+        
         try {
             // 1. Pega a string "crua"
             const f_str_raw = document.getElementById('bissecao-f').value;
@@ -206,16 +236,38 @@ document.addEventListener('DOMContentLoaded', () => {
             const es = parseFloat(document.getElementById('bissecao-es').value);
             const imax = parseInt(document.getElementById('bissecao-imax').value);
 
-            resultOutput.textContent = `Função interpretada: ${f_str}\n\nCalculando...`;
+            resultOutput.textContent = `🔍 Analisando função: ${f_str}\n\n⏳ Calculando raiz pelo método da bisseção...`;
 
             const f = new Function('x', `with(Math) { return ${f_str}; }`);
 
             const resultado = bissecao(f, xl, xu, es, imax); //
 
-            resultOutput.textContent = `Função interpretada: ${f_str}\n\n` +
-                                     `Resultado:\n${JSON.stringify(resultado, null, 2)}`;
+            // Formatação melhorada dos resultados
+            let resultStr = "✨ MÉTODO DA BISSEÇÃO ✨\n";
+            resultStr += "═".repeat(45) + "\n\n";
+            resultStr += `📊 Função interpretada: ${f_str}\n\n`;
+            
+            if (resultado.message) {
+                resultStr += `❌ ${resultado.message}\n\n`;
+                resultStr += "💡 Dica: Verifique se f(xl) e f(xu) têm sinais opostos! 💕";
+            } else {
+                resultStr += "🎯 RESULTADO ENCONTRADO:\n\n";
+                resultStr += `💎 Raiz aproximada: ${resultado.root.toFixed(8)}\n`;
+                resultStr += `📈 Erro relativo: ${resultado.error.toFixed(6)}%\n`;
+                resultStr += `🔄 Iterações realizadas: ${resultado.iterations}\n\n`;
+                resultStr += "═".repeat(45) + "\n";
+                resultStr += "✅ Método executado com sucesso! 💖";
+                
+                // Adiciona animações de celebração apenas para sucesso
+                setTimeout(() => {
+                    resultContainer.classList.add('result-celebration');
+                    resultHeader.classList.add('result-success');
+                }, 100);
+            }
+
+            resultOutput.textContent = resultStr;
         } catch (error) {
-             resultOutput.textContent = `Erro ao avaliar a função ou executar o método:\n${error.message}`;
+             resultOutput.textContent = `❌ ERRO:\n${error.message}\n\n💡 Verifique a função e os parâmetros inseridos! 💕`;
         }
     });
 
@@ -225,6 +277,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     newtonForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        const resultContainer = document.getElementById('result-container');
+        const resultHeader = document.querySelector('.result-header');
+        
+        // Remove classes de animação anteriores
+        resultContainer.classList.remove('result-celebration');
+        resultHeader.classList.remove('result-success');
 
         let f_str_js, fprime_str_js;
 
@@ -265,8 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const es = parseFloat(document.getElementById('newton-es').value);
             const imax = parseInt(document.getElementById('newton-imax').value);
 
-            resultOutput.textContent = `Função f(x) interpretada: ${f_str_js}\n` +
-                                     `Derivada f'(x) calculada: ${fprime_str_js}\n\nCalculando...`;
+            resultOutput.textContent = `🔍 Função f(x): ${f_str_js}\n🧮 Derivada f'(x): ${fprime_str_js}\n\n⏳ Calculando pelo método de Newton-Raphson...`;
 
             // Cria as duas funções
             const f = new Function('x', `with(Math) { return ${f_str_js}; }`);
@@ -275,12 +332,34 @@ document.addEventListener('DOMContentLoaded', () => {
             // Chama a função original do newton.js
             const resultado = newtonRaphson(f, fPrime, x0, es, imax);
 
-            resultOutput.textContent = `Função f(x) interpretada: ${f_str_js}\n` +
-                                     `Derivada f'(x) calculada: ${fprime_str_js}\n\n` +
-                                     `Resultado:\n${JSON.stringify(resultado, null, 2)}`;
+            // Formatação melhorada dos resultados
+            let resultStr = "✨ MÉTODO DE NEWTON-RAPHSON ✨\n";
+            resultStr += "═".repeat(50) + "\n\n";
+            resultStr += `📊 Função f(x): ${f_str_js}\n`;
+            resultStr += `🧮 Derivada f'(x): ${fprime_str_js}\n\n`;
+            
+            if (resultado.message) {
+                resultStr += `❌ ${resultado.message}\n\n`;
+                resultStr += "💡 Dica: Tente um chute inicial diferente ou verifique se a derivada não é zero! 💕";
+            } else {
+                resultStr += "🎯 RESULTADO ENCONTRADO:\n\n";
+                resultStr += `💎 Raiz aproximada: ${resultado.root.toFixed(8)}\n`;
+                resultStr += `📈 Erro relativo: ${resultado.error.toFixed(6)}%\n`;
+                resultStr += `🔄 Iterações realizadas: ${resultado.iterations}\n\n`;
+                resultStr += "═".repeat(50) + "\n";
+                resultStr += "✅ Método executado com sucesso! 💖";
+                
+                // Adiciona animações de celebração apenas para sucesso
+                setTimeout(() => {
+                    resultContainer.classList.add('result-celebration');
+                    resultHeader.classList.add('result-success');
+                }, 100);
+            }
+
+            resultOutput.textContent = resultStr;
 
         } catch (error) {
-            resultOutput.textContent = `Erro ao derivar ou avaliar a função:\n${error.message}`;
+            resultOutput.textContent = `❌ ERRO:\n${error.message}\n\n💡 Verifique a função e os parâmetros inseridos! 💕`;
         }
     });
 
