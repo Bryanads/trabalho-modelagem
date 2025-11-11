@@ -1,32 +1,39 @@
-// Aguarda o DOM estar pronto
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Seletores dos Elementos ---
     const navLinks = document.querySelectorAll('nav a');
     const panels = document.querySelectorAll('.panel');
     const resultOutput = document.getElementById('result-output');
+    const calculatorSection = document.getElementById('calculator-section');
 
-    // --- Seletores dos Formulários ---
     const gaussForm = document.getElementById('gauss-form');
     const bissecaoForm = document.getElementById('bissecao-form');
     const newtonForm = document.getElementById('newton-form');
 
-    // --- Seletores de Gauss ---
     const btnSetMatrix = document.getElementById('btn-set-matrix');
     const matrixContainer = document.getElementById('gauss-matrix-container');
 
-    // --- Lógica de Navegação por Abas ---
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
+
+            const targetId = link.id.replace('nav-', 'panel-');
+
+            if (targetId === 'panel-bissecao' || targetId === 'panel-newton') {
+                calculatorSection.style.display = 'block';
+            } else {
+                calculatorSection.style.display = 'none';
+            }
+
             navLinks.forEach(l => l.classList.remove('active'));
             panels.forEach(p => p.classList.remove('active'));
-            const targetId = link.id.replace('nav-', 'panel-');
+
             document.getElementById(targetId).classList.add('active');
             link.classList.add('active');
+
             resultOutput.textContent = '';
-            calculator.style.display = 'none';
-            activeMathInput = null;
+            if (activeMathInput) {
+                activeMathInput.value = '';
+            }
         });
     });
 
@@ -94,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ===========================================
-    // --- "Tradutor" de Multiplicação Implícita (DE VOLTA!) ---
+    // --- "Tradutor" de Multiplicação Implícita ---
     // ===========================================
     /**
      * Corrige a sintaxe de multiplicação implícita (ex: 3x -> 3*x).
@@ -165,11 +172,10 @@ document.addEventListener('DOMContentLoaded', () => {
         resultOutput.textContent = '';
         const resultContainer = document.getElementById('result-container');
         const resultHeader = document.querySelector('.result-header');
-        
-        // Remove classes de animação anteriores
+
         resultContainer.classList.remove('result-celebration');
         resultHeader.classList.remove('result-success');
-        
+
         try {
             const n = parseInt(document.getElementById('gauss-n').value);
             let A = Array(n).fill(0).map(() => Array(n).fill(0));
@@ -186,49 +192,44 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             eliminacaoGaussianaPivoteamento(A, b); //
             const solucao_x = retroSubstituicao(A, b);
-            
-            // Formatação melhorada dos resultados
+
             let resultStr = "✨ SOLUÇÃO DO SISTEMA LINEAR, PRA VOCÊ, MINHA GATA! 💕\n";
             resultStr += "═".repeat(40) + "\n\n";
             resultStr += "🎯 Vetor Solução (x):\n\n";
-            
+
             solucao_x.forEach((val, i) => {
                 resultStr += `💖 x[${i}] = ${val.toFixed(6)}\n`;
             });
-            
+
             resultStr += "\n" + "═".repeat(40) + "\n";
             resultStr += "✅ Sistema resolvido com sucesso, bebê! 💖";
-            
+
             resultOutput.textContent = resultStr;
-            
-            // Adiciona animações de celebração
+
             setTimeout(() => {
                 resultContainer.classList.add('result-celebration');
                 resultHeader.classList.add('result-success');
             }, 100);
-            
+
         } catch (error) {
             resultOutput.textContent = `❌ ERRO:\n${error.message}\n\n💡 Verifique os valores inseridos e tente novamente! 💕`;
         }
     });
 
     // ===========================================
-    // --- Lógica da Bisseção (ATUALIZADA) ---
+    // --- Lógica da Bisseção---
     // ===========================================
 
     bissecaoForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const resultContainer = document.getElementById('result-container');
         const resultHeader = document.querySelector('.result-header');
-        
-        // Remove classes de animação anteriores
+
         resultContainer.classList.remove('result-celebration');
         resultHeader.classList.remove('result-success');
-        
+
         try {
-            // 1. Pega a string "crua"
-            const f_str_raw = document.getElementById('bissecao-f').value;
-            // 2. *** PASSA PELO PARSER ***
+            const f_str_raw = activeMathInput.value;
             const f_str = parseMathString(f_str_raw);
 
             const xl = parseFloat(document.getElementById('bissecao-xl').value);
@@ -242,11 +243,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const resultado = bissecao(f, xl, xu, es, imax); //
 
-            // Formatação melhorada dos resultados
             let resultStr = "✨ MÉTODO DA BISSEÇÃO ✨\n";
             resultStr += "═".repeat(45) + "\n\n";
             resultStr += `📊 Função interpretada: ${f_str}\n\n`;
-            
+
             if (resultado.message) {
                 resultStr += `❌ ${resultado.message}\n\n`;
                 resultStr += "💡 Dica: Verifique se f(xl) e f(xu) têm sinais opostos! 💕";
@@ -257,8 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resultStr += `🔄 Iterações realizadas: ${resultado.iterations}\n\n`;
                 resultStr += "═".repeat(45) + "\n";
                 resultStr += "✅ Método executado com sucesso! 💖";
-                
-                // Adiciona animações de celebração apenas para sucesso
+
                 setTimeout(() => {
                     resultContainer.classList.add('result-celebration');
                     resultHeader.classList.add('result-success');
@@ -272,52 +271,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ===========================================
-    // --- Lógica de Newton-Raphson (ATUALIZADA) ---
+    // --- Lógica de Newton-Raphson ---
     // ===========================================
 
     newtonForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const resultContainer = document.getElementById('result-container');
         const resultHeader = document.querySelector('.result-header');
-        
-        // Remove classes de animação anteriores
+
         resultContainer.classList.remove('result-celebration');
         resultHeader.classList.remove('result-success');
 
         let f_str_js, fprime_str_js;
 
         try {
-            // 1. Pega a string "crua" da calculadora
-            // Ex: (E**x)-3x
-            const f_str_raw = document.getElementById('newton-f').value;
+
+            const f_str_raw = activeMathInput.value;
             if (!f_str_raw) throw new Error("A função f(x) não pode estar vazia.");
 
-            // 2. *** PASSA PELO PARSER *** (O PASSO QUE FALTAVA)
-            // Ex: (E**x) - 3 * x
             f_str_js = parseMathString(f_str_raw);
 
-            // 3. Traduz a string JS (corrigida) para a sintaxe do math.js
-            // Ex: (e^x) - 3 * x
             let f_str_mathjs = f_str_js
-                                .replace(/\*\*/g, '^')  // Troca ** por ^
-                                .replace(/\bE\b/g, 'e')   // Troca E (constante) por e
-                                .replace(/\bPI\b/g, 'pi'); // Troca PI por pi
+                                .replace(/\*\*/g, '^')
+                                .replace(/\bE\b/g, 'e')
+                                .replace(/\bPI\b/g, 'pi');
 
-            // 4. Calcula a derivada usando math.js (AGORA VAI FUNCIONAR)
             const derivativeNode = math.derivative(f_str_mathjs, 'x');
 
-            // 5. Converte a derivada de volta para string (sintaxe math.js)
-            // Ex: exp(x) - 3
             let fprime_str_mathjs = derivativeNode.toString();
 
-            // 6. Traduz a string da derivada de volta para sintaxe JS
-            // Ex: exp(x) - 3  ->  Math.exp(x) - 3 (ou apenas exp(x) - 3)
             fprime_str_js = fprime_str_mathjs
-                                .replace(/\^/g, '**') // Troca ^ por **
-                                .replace(/\be\b/g, 'E')  // Troca e por E
-                                .replace(/\bpi\b/g, 'PI'); // Troca pi por PI
-
-            // --- Continua como antes ---
+                                .replace(/\^/g, '**')
+                                .replace(/\be\b/g, 'E')
+                                .replace(/\bpi\b/g, 'PI');
 
             const x0 = parseFloat(document.getElementById('newton-x0').value);
             const es = parseFloat(document.getElementById('newton-es').value);
@@ -325,19 +311,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             resultOutput.textContent = `🔍 Função f(x): ${f_str_js}\n🧮 Derivada f'(x): ${fprime_str_js}\n\n⏳ Calculando pelo método de Newton-Raphson...`;
 
-            // Cria as duas funções
             const f = new Function('x', `with(Math) { return ${f_str_js}; }`);
             const fPrime = new Function('x', `with(Math) { return ${fprime_str_js}; }`);
 
-            // Chama a função original do newton.js
             const resultado = newtonRaphson(f, fPrime, x0, es, imax);
 
-            // Formatação melhorada dos resultados
             let resultStr = "✨ MÉTODO DE NEWTON-RAPHSON ✨\n";
             resultStr += "═".repeat(50) + "\n\n";
             resultStr += `📊 Função f(x): ${f_str_js}\n`;
             resultStr += `🧮 Derivada f'(x): ${fprime_str_js}\n\n`;
-            
+
             if (resultado.message) {
                 resultStr += `❌ ${resultado.message}\n\n`;
                 resultStr += "💡 Dica: Tente um chute inicial diferente ou verifique se a derivada não é zero! 💕";
@@ -348,8 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resultStr += `🔄 Iterações realizadas: ${resultado.iterations}\n\n`;
                 resultStr += "═".repeat(50) + "\n";
                 resultStr += "✅ Método executado com sucesso! 💖";
-                
-                // Adiciona animações de celebração apenas para sucesso
+
                 setTimeout(() => {
                     resultContainer.classList.add('result-celebration');
                     resultHeader.classList.add('result-success');
@@ -363,6 +345,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Inicialização ---
-    btnSetMatrix.click(); // Gera a matriz 3x3 inicial para Gauss
+    btnSetMatrix.click(); 
 });
